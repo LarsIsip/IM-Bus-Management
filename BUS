@@ -13,7 +13,7 @@ class CityBusManagementSystem(tk.Tk):
         self.configure(bg='navyblue')
 
         # Load the logo image
-        img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.png')
+        img = PhotoImage(file='C:/Users/ASUS/Downloads/city hiho.png')
         logo_label = tk.Label(self, image=img, bg='navyblue', height=200, width=350)
         logo_label.image = img  # Keep a reference to avoid garbage collection
         logo_label.pack(pady=10)
@@ -49,6 +49,7 @@ class CityBusManagementSystem(tk.Tk):
 if __name__ == "__main__":
     app = CityBusManagementSystem()
     app.mainloop()
+
 
 
 B. TRIP
@@ -99,6 +100,98 @@ def create_bus_trip_interface():
 
 if __name__ == "__main__":
     create_bus_trip_interface()
+
+B.TICKET
+
+import tkinter as tk
+from tkinter import ttk
+
+# Create the main window
+root = tk.Tk()
+root.title("Book Ticket")
+root.geometry("400x500")  # Adjusted to fit the image and form
+root.configure(bg="navyblue")
+
+# Load the image
+image = tk.PhotoImage(file="C:/Users/ASUS/Downloads/city hiho.png")
+
+# Create a label for the image and place it above the form
+image_label = tk.Label(root, image=image, bg="navyblue")
+image_label.pack(pady=(20, 10))  # Adjust padding as needed
+
+# Create a frame for the form
+form_frame = tk.Frame(root, bg="white", padx=20, pady=20)
+form_frame.pack(pady=(0, 20))  # Adjust padding as needed
+
+# Create and place the labels and entry widgets
+name_label = tk.Label(form_frame, text="Name", bg="white")
+name_label.grid(row=0, column=0, columnspan=2, pady=(0, 5), sticky=tk.W)
+
+name_entry = tk.Entry(form_frame, width=30)
+name_entry.grid(row=1, column=0, columnspan=2, pady=5)
+
+contact_label = tk.Label(form_frame, text="Contact Number", bg="white")
+contact_label.grid(row=2, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
+contact_entry = tk.Entry(form_frame, width=30)
+contact_entry.grid(row=3, column=0, columnspan=2, pady=5)
+
+amount_label = tk.Label(form_frame, text="Amount", bg="white")
+amount_label.grid(row=4, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
+amount_entry = tk.Entry(form_frame, width=30)
+amount_entry.grid(row=5, column=0, columnspan=2, pady=5)
+
+# Create and place the Next button
+next_button = tk.Button(form_frame, text="NEXT", bg="navyblue", fg="white", padx=30)
+next_button.grid(row=6, column=0, columnspan=2, pady=20)
+
+# Run the application
+root.mainloop()
+
+B.TICKET SUCCESS
+
+import tkinter as tk
+from tkinter import messagebox
+
+def show_message():
+    messagebox.showinfo("Booking Information", "Name: Juan\nContact: 0123456789\nBUS 1\nTrip: SM Caloocan - SM North\n6:00 am - 9:00 am\nDriver: Bentong\nAmount: 50")
+
+root = tk.Tk()
+root.title("Booking Confirmation")
+
+# Set the background color of the root window
+root.configure(bg="navyblue")
+
+# Create the main frame
+main_frame = tk.Frame(root, bg="navyblue")
+main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+# Add title label
+title_label = tk.Label(main_frame, text="Book Successfully!", bg="navyblue", fg="white", font=("calibri", 18, "bold"))
+title_label.pack(pady=10)
+
+# Create the booking details frame
+details_frame = tk.Frame(main_frame, bg="white")
+details_frame.pack(ipady=50, ipadx=80, expand=True)
+
+# Add booking details labels
+details_text = (
+    "Name: Juan\n"
+    "Contact: 0123456789\n\n"
+    "BUS 1\n"
+    "Trip: SM Caloocan - SM North\n"
+    "6:00 am - 9:00 am\n"
+    "Driver: Bentong\n\n"
+    "Amount: 50"
+)
+details_label = tk.Label(details_frame, text=details_text, bg="white", font=("calibri", 12))
+details_label.pack(pady=10)
+
+# Add OK button
+ok_button = tk.Button(details_frame, text="OK", command=show_message, font=("calibri", 12), bg="navyblue", fg="white", width=10)
+ok_button.pack(pady=10)
+
+root.mainloop()
+
 
 
 
