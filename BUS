@@ -2,22 +2,25 @@ B.SELECTION OF BUS
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter import PhotoImage
 
 class CityBusManagementSystem(tk.Tk):
     def __init__(self):
         super().__init__()
 
         self.title("City Bus Management System")
-        self.geometry("400x300")
+        self.geometry("600x400")  # Adjusted to fit the logo and other widgets comfortably
         self.configure(bg='navyblue')
 
-        # Title
-        title_label = tk.Label(self, text="City Bus Management System", font=("poppins", 20, "bold"), fg="white",  bg='navyblue')
-        title_label.pack(pady=70)
+        # Load the logo image
+        img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.png')
+        logo_label = tk.Label(self, image=img, bg='navyblue', height=200, width=350)
+        logo_label.image = img  # Keep a reference to avoid garbage collection
+        logo_label.pack(pady=10)
 
         # Outer container for centering
         outer_container = tk.Frame(self, bg='white')
-        outer_container.pack(expand=True)
+        outer_container.pack(expand=True, padx=0, pady=20)
 
         # Inner container for buses
         container = tk.Frame(outer_container, bg='white')
@@ -46,6 +49,7 @@ class CityBusManagementSystem(tk.Tk):
 if __name__ == "__main__":
     app = CityBusManagementSystem()
     app.mainloop()
+
 
 B. TRIP
 
@@ -95,4 +99,6 @@ def create_bus_trip_interface():
 
 if __name__ == "__main__":
     create_bus_trip_interface()
+
+
 
