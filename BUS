@@ -9,44 +9,40 @@ def login():
   username = username_entry.get()
   password = password_entry.get()
 
-  # Add validation and error handling here, e.g., check if username is empty or password meets complexity requirements
-  # ... (Implement your login logic here)
-
-  # Simulate successful login by printing a message (replace with actual actions)
   print("Login successful!")
 
 root = Tk()
-root.title("City Bus Management")
+root.title("City Bus Management System")
 
-# Set the background color of the main window to white
+# For main window to bg-white
 root.configure(background="white")
 
 img = PhotoImage(file='C:/Users/ASUS/Downloads/CITY.png')
 
-label = Label(root, image=img, height=330, width=350)
+label = Label(root, image=img, height=400, width=350)
 label.pack(padx=30, pady=1)
 
-# Create a frame to hold the label and entry fields
+# For Creating a frame to hold the label and entry fields
 frame = Frame(root, background="white")
 frame.pack(padx=0, pady=50)
 
-# Create a label for the username
+# For Creating a label for the username
 username_label = Label(frame, text="Username:", width=50, background="white", anchor='w')
 username_label.pack()
 
-# Create an entry field for the username
+# Creating an entry field for the username
 username_entry = Entry(frame, width=58)
 username_entry.pack()
 
-# Create a label for the password
+# Label for the password
 password_label = Label(frame, text="Password:", width=50, background="white", anchor='w')
 password_label.pack()
 
-# Create an entry field for the password (set show="*" for password masking)
+# For entry field for the password (set show="*" for password masking)
 password_entry = Entry(frame, width=58, show="*")  # Password masking added
 password_entry.pack()
 
-# Create a button to login
+# For button to login
 login_button = Button(frame, text="Login", command=login, bg="navyblue", font=("Calibri", 10, "bold"), fg="white", padx=5, pady=5, width=10)
 login_button.pack(pady=20)
 
@@ -63,14 +59,14 @@ class CityBusManagementSystem(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("City Bus Management System")
-        self.geometry("600x400")  # Adjusted to fit the logo and other widgets comfortably
+        self.title("City Bus Selection")
+        self.geometry("600x400")  # Adjusted to fit the logo.
         self.configure(bg='navyblue')
 
-        # Load the logo image
+        # Logo image
         img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
         logo_label = tk.Label(self, image=img, bg='navyblue', height=200, width=350)
-        logo_label.image = img  # Keep a reference to avoid garbage collection
+        logo_label.image = img  # To Keep a reference to avoid garbage collection
         logo_label.pack(pady=10)
 
         # Outer container for centering
@@ -118,25 +114,25 @@ from tkinter import PhotoImage
 
 def create_bus_trip_interface():
     root = tk.Tk()
-    root.title("BUS Trip")
+    root.title("City Bus Trip")
     root.geometry("400x500")  # Adjusted to accommodate the logo
     root.config(bg="navyblue")
 
-    # Load the logo image
+    # Logo image
     img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
     logo_label = tk.Label(root, image=img, bg='navyblue', height=200, width=350)
-    logo_label.image = img  # Keep a reference to avoid garbage collection
+    logo_label.image = img  # To Keep a reference to avoid garbage collection
     logo_label.pack(pady=10)
 
-    # Frame for the bus trip details with adjusted height
+    # Frame for the bus trip details.
     frame = ttk.Frame(root, padding=(200, 30), relief="solid")
     frame.place(relx=0.5, rely=0.6, anchor="center")  # Adjusted to fit below the logo
 
-    # Title
+    # For the Title
     title_label = ttk.Label(frame, text="Bus 1", font=("calibri", 18, "bold"))
     title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
-    # Route details labels
+    # For Route details labels
     route_label = ttk.Label(frame, text="SM Caloocan - SM North", font=("calibri", 12, "bold"), justify="center")
     route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
 
@@ -149,7 +145,7 @@ def create_bus_trip_interface():
     route_label = ttk.Label(frame, text="Driver: Bentong", font=("calibri", 10), justify="center")
     route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
 
-    # Stops
+    # For Stops
     stops = [("SM Caloocan", 1), ("SM Fairview", 2), ("SM North", 3)]
     for stop, row in stops:
         stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
@@ -174,22 +170,22 @@ from tkinter import ttk
 
 # Create the main window
 root = tk.Tk()
-root.title("Book Ticket")
-root.geometry("400x500")  # Adjusted to fit the image and form
+root.title("City Bus Book Ticket")
+root.geometry("400x500")  # Adjusted to fit the image and forms
 root.configure(bg="navyblue")
 
-# Load the image
+# For image/logo
 image = tk.PhotoImage(file="C:/Users/ASUS/Downloads/CBMS.1.png")
 
-# Create a label for the image and place it above the form
+# Label for the image and place it above the form
 image_label = tk.Label(root, image=image, bg="navyblue")
 image_label.pack(pady=(20, 10))  # Adjust padding as needed
 
-# Create a frame for the form
+# Frame for the form
 form_frame = tk.Frame(root, bg="white", padx=60, pady=50)
 form_frame.pack(pady=(0, 20))  # Adjust padding as needed
 
-# Create and place the labels and entry widgets
+# Place for the labels and entry widgets
 name_label = tk.Label(form_frame, text="Name", bg="white")
 name_label.grid(row=0, column=0, columnspan=2, pady=(0, 5), sticky=tk.W)
 
@@ -206,7 +202,7 @@ amount_label.grid(row=4, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
 amount_entry = tk.Entry(form_frame, width=30)
 amount_entry.grid(row=5, column=0, columnspan=2, pady=5)
 
-# Create and place the Next button
+# For placng the Next button
 next_button = tk.Button(form_frame, text="NEXT", bg="navyblue", fg="white", padx=30)
 next_button.grid(row=6, column=0, columnspan=2, pady=20)
 
@@ -224,22 +220,22 @@ def show_message():
 root = tk.Tk()
 root.title("Booking Confirmation")
 
-# Set the background color of the root window
+# Setting the background color of the root window
 root.configure(bg="navyblue")
 
-# Create the main frame
+# For main frame
 main_frame = tk.Frame(root, bg="navyblue")
 main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-# Add title label
+# For Add title label
 title_label = tk.Label(main_frame, text="Book Successfully!", bg="navyblue", fg="white", font=("calibri", 18, "bold"))
 title_label.pack(pady=50)
 
-# Create the booking details frame
+# Booking details frame
 details_frame = tk.Frame(main_frame, bg="white")
 details_frame.pack(ipady=50, ipadx=80, expand=True)
 
-# Add booking details labels
+# For Add booking details labels
 details_text = (
     "Name: Juan\n"
     "Contact: 0123456789\n\n"
@@ -252,11 +248,12 @@ details_text = (
 details_label = tk.Label(details_frame, text=details_text, bg="white", font=("calibri", 12))
 details_label.pack(pady=10)
 
-# Add OK button
+# For OK button
 ok_button = tk.Button(details_frame, text="OK", command=show_message, font=("calibri", 12), bg="navyblue", fg="white", width=10)
 ok_button.pack(pady=10)
 
 root.mainloop()
+
 
 
 
