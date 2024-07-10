@@ -153,9 +153,253 @@ def create_bus_trip_interface():
         stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
         stop_name_label.grid(row=row+4, column=1, sticky="w")
 
+    # Back button
+    back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+
     # Next button
-    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=30)
-    next_button.grid(row=len(stops) + 5, column=0, columnspan=2, pady=(30, 0))
+    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    create_bus_trip_interface()
+
+B2.TRIP
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import PhotoImage
+
+def create_bus_trip_interface():
+    root = tk.Tk()
+    root.title("City Bus Trip")
+    root.geometry("400x500")  # Adjusted to accommodate the logo
+    root.config(bg="navyblue")
+
+    # Logo image
+    img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
+    logo_label = tk.Label(root, image=img, bg='navyblue', height=200, width=350)
+    logo_label.image = img  # To Keep a reference to avoid garbage collection
+    logo_label.pack(pady=10)
+
+    # Frame for the bus trip details.
+    frame = ttk.Frame(root, padding=(200, 30), relief="solid")
+    frame.place(relx=0.5, rely=0.6, anchor="center")  # Adjusted to fit below the logo
+
+    # For the Title
+    title_label = ttk.Label(frame, text="Bus 2", font=("calibri", 18, "bold"))
+    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+    # For Route details labels
+    route_label = ttk.Label(frame, text="SM Fairview - SM Megamall", font=("calibri", 12, "bold"), justify="center")
+    route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+
+    route_label = ttk.Label(frame, text="Mon - Fri", font=("calibri", 10), justify="center")
+    route_label.grid(row=2, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="6:00am - 9:00am", font=("calibri", 11), justify="center")
+    route_label.grid(row=3, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="Driver: Lars", font=("calibri", 10), justify="center")
+    route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
+
+    # For Stops
+    stops = [("Sm Fairview", 1), ("SM Fairview", 2), ("SM Megamall", 3)]
+    for stop, row in stops:
+        stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
+        stop_label.grid(row=row+4, column=0, padx=(0, 10))
+        stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
+        stop_name_label.grid(row=row+4, column=1, sticky="w")
+
+    # Back button
+    back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+
+    # Next button
+    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    create_bus_trip_interface()
+
+B3.TRIP
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import PhotoImage
+
+def create_bus_trip_interface():
+    root = tk.Tk()
+    root.title("City Bus Trip")
+    root.geometry("400x500")  # Adjusted to accommodate the logo
+    root.config(bg="navyblue")
+
+    # Logo image
+    img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
+    logo_label = tk.Label(root, image=img, bg='navyblue', height=200, width=350)
+    logo_label.image = img  # To Keep a reference to avoid garbage collection
+    logo_label.pack(pady=10)
+
+    # Frame for the bus trip details.
+    frame = ttk.Frame(root, padding=(200, 30), relief="solid")
+    frame.place(relx=0.5, rely=0.6, anchor="center")  # Adjusted to fit below the logo
+
+    # For the Title
+    title_label = ttk.Label(frame, text="Bus 3", font=("calibri", 18, "bold"))
+    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+    # For Route details labels
+    route_label = ttk.Label(frame, text="SM Fairview - SM Moa", font=("calibri", 12, "bold"), justify="center")
+    route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+
+    route_label = ttk.Label(frame, text="Mon - Fri", font=("calibri", 10), justify="center")
+    route_label.grid(row=2, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="6:00am - 9:00am", font=("calibri", 11), justify="center")
+    route_label.grid(row=3, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="Driver: Seth", font=("calibri", 10), justify="center")
+    route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
+
+    # For Stops
+    stops = [("Sm Fairview", 1), ("SM Caloocan", 2), ("SM Moa", 3)]
+    for stop, row in stops:
+        stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
+        stop_label.grid(row=row+4, column=0, padx=(0, 10))
+        stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
+        stop_name_label.grid(row=row+4, column=1, sticky="w")
+
+    # Back button
+    back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+
+    # Next button
+    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    create_bus_trip_interface()
+
+B4.TRIP
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import PhotoImage
+
+def create_bus_trip_interface():
+    root = tk.Tk()
+    root.title("City Bus Trip")
+    root.geometry("400x500")  # Adjusted to accommodate the logo
+    root.config(bg="navyblue")
+
+    # Logo image
+    img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
+    logo_label = tk.Label(root, image=img, bg='navyblue', height=200, width=350)
+    logo_label.image = img  # To Keep a reference to avoid garbage collection
+    logo_label.pack(pady=10)
+
+    # Frame for the bus trip details.
+    frame = ttk.Frame(root, padding=(200, 30), relief="solid")
+    frame.place(relx=0.5, rely=0.6, anchor="center")  # Adjusted to fit below the logo
+
+    # For the Title
+    title_label = ttk.Label(frame, text="Bus 4", font=("calibri", 18, "bold"))
+    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+    # For Route details labels
+    route_label = ttk.Label(frame, text="SM Novaliches - SM Moa", font=("calibri", 12, "bold"), justify="center")
+    route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+
+    route_label = ttk.Label(frame, text="Mon - Fri", font=("calibri", 10), justify="center")
+    route_label.grid(row=2, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="6:00am - 9:00am", font=("calibri", 11), justify="center")
+    route_label.grid(row=3, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="Driver: Andeng", font=("calibri", 10), justify="center")
+    route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
+
+    # For Stops
+    stops = [("Sm Novaliches", 1), ("SM Caloocan", 2), ("SM Moa", 3)]
+    for stop, row in stops:
+        stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
+        stop_label.grid(row=row+4, column=0, padx=(0, 10))
+        stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
+        stop_name_label.grid(row=row+4, column=1, sticky="w")
+
+    # Back button
+    back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+
+    # Next button
+    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    create_bus_trip_interface()
+
+B5.TRIP
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import PhotoImage
+
+def create_bus_trip_interface():
+    root = tk.Tk()
+    root.title("City Bus Trip")
+    root.geometry("400x500")  # Adjusted to accommodate the logo
+    root.config(bg="navyblue")
+
+    # Logo image
+    img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
+    logo_label = tk.Label(root, image=img, bg='navyblue', height=200, width=350)
+    logo_label.image = img  # To Keep a reference to avoid garbage collection
+    logo_label.pack(pady=10)
+
+    # Frame for the bus trip details.
+    frame = ttk.Frame(root, padding=(200, 30), relief="solid")
+    frame.place(relx=0.5, rely=0.6, anchor="center")  # Adjusted to fit below the logo
+
+    # For the Title
+    title_label = ttk.Label(frame, text="Bus 5", font=("calibri", 18, "bold"))
+    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+    # For Route details labels
+    route_label = ttk.Label(frame, text="SM Manila - SM North", font=("calibri", 12, "bold"), justify="center")
+    route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+
+    route_label = ttk.Label(frame, text="Mon - Fri", font=("calibri", 10), justify="center")
+    route_label.grid(row=2, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="6:00am - 9:00am", font=("calibri", 11), justify="center")
+    route_label.grid(row=3, column=0, columnspan=2, pady=(0, 0))
+
+    route_label = ttk.Label(frame, text="Driver: Sean", font=("calibri", 10), justify="center")
+    route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
+
+    # For Stops
+    stops = [("Sm Manila", 1), ("SM Caloocan", 2), ("SM North", 3)]
+    for stop, row in stops:
+        stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
+        stop_label.grid(row=row+4, column=0, padx=(0, 10))
+        stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
+        stop_name_label.grid(row=row+4, column=1, sticky="w")
+
+    # Back button
+    back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+
+    # Next button
+    next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
 
     root.mainloop()
 
