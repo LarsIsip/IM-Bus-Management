@@ -52,7 +52,6 @@ root.mainloop()
 B.SELECTION OF BUS
 
 import tkinter as tk
-from tkinter import ttk
 from tkinter import PhotoImage
 
 class CityBusManagementSystem(tk.Tk):
@@ -60,53 +59,66 @@ class CityBusManagementSystem(tk.Tk):
         super().__init__()
 
         self.title("City Bus Selection")
-        self.geometry("600x400")  # Adjusted to fit the logo.
+        self.geometry("650x500")  # Adjusted to fit all elements comfortably.
         self.configure(bg='navyblue')
 
         # Logo image
         img = PhotoImage(file='C:/Users/ASUS/Downloads/CBMS.1.png')
         logo_label = tk.Label(self, image=img, bg='navyblue', height=200, width=350)
-        logo_label.image = img  # To Keep a reference to avoid garbage collection
+        logo_label.image = img  # To keep a reference to avoid garbage collection
         logo_label.pack(pady=10)
 
         # Outer container for centering
         outer_container = tk.Frame(self, bg='white')
-        outer_container.pack(expand=True, padx=0, pady=20)
+        outer_container.pack(expand=True, padx=20, pady=20)
 
         # Inner container for buses
         container = tk.Frame(outer_container, bg='white')
-        container.pack(expand=True, padx=60, pady=60)
+        container.pack(expand=True, padx=40, pady=30)
+
+        # "Select Bus Schedule" text
+        select_bus_label = tk.Label(container, text="Select Bus Schedule:", font=("calibri", 12, "bold"), bg='white')
+        select_bus_label.grid(row=0, column=0, columnspan=2, padx=7, pady=(5, 10), sticky='w')
 
         # Click event handler
         def on_bus_click(bus_info):
             print(f"You clicked on {bus_info}")
 
+        # Button configuration
+        button_config = {
+            'font': ("calibri", 12, "bold"),
+            'fg': "white",
+            'bg': 'navyblue',
+            'width': 25,
+            'height': 3
+        }
+
         # Bus 1
-        bus1_button = tk.Button(container, text="Bus 1\nSM Caloocan - SM North\n30 seats", font=("calibri", 12, "bold"), fg="white", bg='navyblue', command=lambda: on_bus_click("Bus 1\nSM Caloocan - SM North\n30 seats"))
-        bus1_button.grid(row=0, column=0, padx=10, pady=10)
+        bus1_button = tk.Button(container, text="Bus 1\nSM Caloocan - SM North\n30 seats", command=lambda: on_bus_click("Bus 1\nSM Caloocan - SM North\n30 seats"), **button_config)
+        bus1_button.grid(row=1, column=0, padx=10, pady=10)
 
         # Bus 2
-        bus2_button = tk.Button(container, text="Bus 2\nSM Fairview - SM Megamall\n50 seats", font=("calibri", 12, "bold"), fg="white", bg='navyblue', command=lambda: on_bus_click("Bus 2\nSM Fairview - SM Megamall\n50 seats"))
-        bus2_button.grid(row=0, column=1, padx=10, pady=10)
+        bus2_button = tk.Button(container, text="Bus 2\nSM Fairview - SM Megamall\n50 seats", command=lambda: on_bus_click("Bus 2\nSM Fairview - SM Megamall\n50 seats"), **button_config)
+        bus2_button.grid(row=1, column=1, padx=10, pady=10)
 
         # Bus 3
-        bus3_button = tk.Button(container, text="Bus 3\nSM Fairview - SM MOA\n40 seats", font=("calibri", 12, "bold"), fg="white", bg='navyblue', command=lambda: on_bus_click("Bus 3\nSM Fairview - SM MOA\n40 seats"))
-        bus3_button.grid(row=1, column=0, padx=10, pady=10)
+        bus3_button = tk.Button(container, text="Bus 3\nSM Fairview - SM MOA\n40 seats", command=lambda: on_bus_click("Bus 3\nSM Fairview - SM MOA\n40 seats"), **button_config)
+        bus3_button.grid(row=2, column=0, padx=10, pady=10)
 
         # Bus 4
-        bus4_button = tk.Button(container, text="Bus 4\nSM Novaliches - SM MOA\n60 seats", font=("calibri", 12, "bold"), fg="white", bg='navyblue', command=lambda: on_bus_click("Bus 4\nSM Novaliches - SM MOA\n60 seats"))
-        bus4_button.grid(row=1, column=1, padx=10, pady=10)
+        bus4_button = tk.Button(container, text="Bus 4\nSM Novaliches - SM MOA\n60 seats", command=lambda: on_bus_click("Bus 4\nSM Novaliches - SM MOA\n60 seats"), **button_config)
+        bus4_button.grid(row=2, column=1, padx=10, pady=10)
 
         # Bus 5
-        bus5_button = tk.Button(container, text="Bus 5\nSM Manila - SM North\n45 seats", font=("calibri", 12, "bold"), fg="white", bg='navyblue', command=lambda: on_bus_click("Bus 5\nSM Manila - SM North\n45 seats"))
-        bus5_button.grid(row=2, column=0, columnspan=2, padx=15, pady=15)  # Centering the button
+        bus5_button = tk.Button(container, text="Bus 5\nSM Manila - SM North\n45 seats", command=lambda: on_bus_click("Bus 5\nSM Manila - SM North\n45 seats"), **button_config)
+        bus5_button.grid(row=3, column=0, columnspan=2, padx=15, pady=15)  # Centering the button
 
 if __name__ == "__main__":
     app = CityBusManagementSystem()
     app.mainloop()
 
 
-B. TRIP
+B1. TRIP
 
 import tkinter as tk
 from tkinter import ttk
@@ -165,6 +177,7 @@ def create_bus_trip_interface():
 
 if __name__ == "__main__":
     create_bus_trip_interface()
+
 
 B2.TRIP
 
@@ -226,6 +239,7 @@ def create_bus_trip_interface():
 if __name__ == "__main__":
     create_bus_trip_interface()
 
+
 B3.TRIP
 
 import tkinter as tk
@@ -275,16 +289,17 @@ def create_bus_trip_interface():
 
     # Back button
     back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
-    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0), padx=4)
 
     # Next button
     next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
-    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0), padx=4)
 
     root.mainloop()
 
 if __name__ == "__main__":
     create_bus_trip_interface()
+
 
 B4.TRIP
 
@@ -346,6 +361,7 @@ def create_bus_trip_interface():
 if __name__ == "__main__":
     create_bus_trip_interface()
 
+
 B5.TRIP
 
 import tkinter as tk
@@ -395,11 +411,11 @@ def create_bus_trip_interface():
 
     # Back button
     back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
-    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0))
+    back_button.grid(row=len(stops) + 5, column=0, pady=(30, 0), padx=4)
 
     # Next button
     next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
-    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0))
+    next_button.grid(row=len(stops) + 5, column=1, pady=(30, 0), padx=4)
 
     root.mainloop()
 
@@ -429,29 +445,36 @@ image_label.pack(pady=(20, 10))  # Adjust padding as needed
 form_frame = tk.Frame(root, bg="white", padx=60, pady=50)
 form_frame.pack(pady=(0, 20))  # Adjust padding as needed
 
+# Instruction label
+instruction_label = tk.Label(form_frame, text="Please fill out the form:", bg="white", font=("calibri", 12, "bold"))
+instruction_label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky=tk.W)
+
 # Place for the labels and entry widgets
 name_label = tk.Label(form_frame, text="Name", bg="white")
-name_label.grid(row=0, column=0, columnspan=2, pady=(0, 5), sticky=tk.W)
+name_label.grid(row=1, column=0, columnspan=2, pady=(0, 5), sticky=tk.W)
 
 name_entry = tk.Entry(form_frame, width=30)
-name_entry.grid(row=1, column=0, columnspan=2, pady=5)
+name_entry.grid(row=2, column=0, columnspan=2, pady=5)
 
 contact_label = tk.Label(form_frame, text="Contact Number", bg="white")
-contact_label.grid(row=2, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
+contact_label.grid(row=3, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
+
 contact_entry = tk.Entry(form_frame, width=30)
-contact_entry.grid(row=3, column=0, columnspan=2, pady=5)
+contact_entry.grid(row=4, column=0, columnspan=2, pady=5)
 
 amount_label = tk.Label(form_frame, text="Amount", bg="white")
-amount_label.grid(row=4, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
-amount_entry = tk.Entry(form_frame, width=30)
-amount_entry.grid(row=5, column=0, columnspan=2, pady=5)
+amount_label.grid(row=5, column=0, columnspan=2, pady=(10, 5), sticky=tk.W)
 
-# For placng the Next button
+amount_entry = tk.Entry(form_frame, width=30)
+amount_entry.grid(row=6, column=0, columnspan=2, pady=5)
+
+# For placing the Next button
 next_button = tk.Button(form_frame, text="NEXT", bg="navyblue", fg="white", padx=30)
-next_button.grid(row=6, column=0, columnspan=2, pady=20)
+next_button.grid(row=7, column=0, columnspan=2, pady=20)
 
 # Run the application
 root.mainloop()
+
 
 B.TICKET SUCCESS
 
