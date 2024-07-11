@@ -66,8 +66,7 @@ def create_bus_selection_window():
     def on_bus_click(bus_info):
         global current_bus
         current_bus = bus_info
-        print(f"You clicked on {bus_info}")
-        create_ticket_booking_window(app)
+        create_bus_trip_interface(bus_info, app) 
         
         
 
@@ -126,7 +125,7 @@ def create_bus_selection_window():
     app.mainloop()
 
 
-def create_bus_trip_interface(bus_info):
+def create_bus_trip_interface(bus_info, master):
     # Parse information from bus_info
     bus_number, route, seats = bus_info.split('\n')
 
@@ -153,15 +152,15 @@ def create_bus_trip_interface(bus_info):
         },
     }
 
-    root = tk.Tk()
+    root = tk.Toplevel(master)
     root.title("City Bus Trip")
     root.geometry("400x500")
     root.config(bg="navyblue")
 
     img = PhotoImage(file=os.path.join(os.path.dirname(__file__), "Assets", "CITY.png"))
-    logo_label = tk.Label(app, image=img, bg='navyblue', height=200, width=350) 
+    logo_label = tk.Label(root, image=img, bg='navyblue')
     logo_label.image = img
-    logo_label.pack(pady=10)
+    logo_label.pack(pady=(20, 10))
 
     frame = ttk.Frame(root, padding=(200, 30), relief="solid")
     frame.place(relx=0.5, rely=0.6, anchor="center")
@@ -196,7 +195,7 @@ def create_bus_trip_interface(bus_info):
         back_button.grid(row=len(details['stops']) + 5, column=0, pady=(30, 0), padx=4)
 
         # Next button
-        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20)
+        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20, command=lambda: [root.destroy(), create_ticket_booking_window(master)]) 
         next_button.grid(row=len(details['stops']) + 5, column=1, pady=(30, 0), padx=4)
     else:
         error_label = ttk.Label(frame, text="Invalid Bus Number!", font=("calibri", 12, "bold"))
