@@ -13,7 +13,7 @@ bus_details = {
     },
     #DB catch other Bus Details
 }
-
+bookings = [] #catcher of booking details
 
 # --- Login Window ---
 def create_login_window():
@@ -63,17 +63,38 @@ def create_login_window():
 
 # --- Bus Selection Window ---
 def create_bus_selection_window():
+
     def on_bus_click(bus_info):
         global current_bus
         current_bus = bus_info
         create_bus_trip_interface(bus_info, app) 
         
+    def on_view_bookings_click():
+        app.withdraw()  # Hide the bus selection window
+        create_view_bookings_window(app)
         
-
     app = tk.Tk()
     app.title("City Bus Selection")
     app.geometry("650x500")
     app.configure(bg='navyblue')
+
+    # Button configuration
+    button_config = {
+        'font': ("calibri", 12, "bold"),
+        'fg': "white",
+        'bg': 'navyblue',
+        'width': 25,
+        'height': 3
+    }
+    view_bookings_button_config = {
+        'font': ("calibri", 12, "bold"),
+        'fg': "navyblue",    
+        'bg': 'white',       
+        'width': 25,
+        'height': 3,
+        'highlightthickness': 2,
+        'highlightbackground': "navyblue" 
+    }
 
     # Logo image
     img = PhotoImage(file=os.path.join(os.path.dirname(__file__), "Assets", "CITY.png"))
@@ -81,8 +102,12 @@ def create_bus_selection_window():
     logo_label.image = img
     logo_label.pack(pady=10)
 
+    # Main Frame (holds all content except the logo)
+    main_frame = tk.Frame(app, bg='navyblue')
+    main_frame.pack(fill=tk.BOTH, expand=True)
+
     # Outer container for centering
-    outer_container = tk.Frame(app, bg='white')
+    outer_container = tk.Frame(main_frame, bg='white')
     outer_container.pack(expand=True, padx=20, pady=20)
 
         # Inner container for buses
@@ -92,15 +117,7 @@ def create_bus_selection_window():
         # "Select Bus Schedule" text
     select_bus_label = tk.Label(container, text="Select Bus Schedule:", font=("calibri", 12, "bold"), bg='white')
     select_bus_label.grid(row=0, column=0, columnspan=2, padx=7, pady=(5, 10), sticky='w')
-
-        # Button configuration
-    button_config = {
-        'font': ("calibri", 12, "bold"),
-        'fg': "white",
-        'bg': 'navyblue',
-        'width': 25,
-        'height': 3
-    }
+    
 
         # Bus 1
     bus1_button = tk.Button(container, text="Bus 1\nSM Caloocan - SM North\n30 seats", command=lambda: on_bus_click("Bus 1\nSM Caloocan - SM North\n30 seats"), **button_config)
@@ -120,14 +137,22 @@ def create_bus_selection_window():
 
         # Bus 5
     bus5_button = tk.Button(container, text="Bus 5\nSM Manila - SM North\n45 seats", command=lambda: on_bus_click("Bus 5\nSM Manila - SM North\n45 seats"), **button_config)
-    bus5_button.grid(row=3, column=0, columnspan=2, padx=15, pady=15)  # Centering the button
+    bus5_button.grid(row=3, column=0, columnspan=2, padx=15, pady=15)
+
+    view_bookings_button = tk.Button(outer_container, text="View Bookings", command=on_view_bookings_click, **view_bookings_button_config)
+    view_bookings_button.pack(side=tk.RIGHT, padx=(0, 15), pady=(0, 20))
+
 
     app.mainloop()
+
+
 
 
 def create_bus_trip_interface(bus_info, master):
     # Parse information from bus_info
     bus_number, route, seats = bus_info.split('\n')
+
+    
 
     bus_details = {
         "Bus 1": {
@@ -322,6 +347,85 @@ def create_ticket_success_window(name, contact, amount):
     show_message()
 
     root.mainloop()
+
+def on_listbox_select(event):
+    widget = event.widget
+    selection = widget.curselection()
+    if selection:
+        index = selection[0]
+        value = widget.get(index)
+        details_label.config(text=value)
+
+def create_view_bookings_window(master):
+    global details_label  # Declare details_label as global
+
+    view_bookings_window = tk.Toplevel(master)
+    view_bookings_window.title("View Bookings")
+    view_bookings_window.config(bg="navyblue")
+
+    # Logo Image
+    img = PhotoImage(file=os.path.join(os.path.dirname(__file__), "Assets", "CITY.png"))  
+    logo_label = tk.Label(view_bookings_window, image=img, bg='navyblue')
+    logo_label.image = img  # Keep a reference to avoid garbage collection
+    logo_label.pack(pady=(20, 10))  
+
+    # Main Frame (holds all content except the logo)
+    main_frame = tk.Frame(view_bookings_window, bg="navyblue")
+    main_frame.pack(fill=tk.BOTH, expand=True)
+
+    # Booking Details Frame
+    details_frame = tk.Frame(main_frame, bg="white", bd=2, relief=tk.SOLID)
+    details_frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)  
+
+    # Details Label (inside the details_frame)
+    details_label = tk.Label(details_frame, text="", bg="white", font=("Calibri", 12)) #Empty at the start
+    details_label.pack(pady=10)
+    
+    # Listbox to display bookings
+    listbox = tk.Listbox(details_frame, width=50)
+    for booking in bookings:
+        listbox.insert(tk.END, booking)  
+    listbox.pack(pady=10, fill=tk.BOTH, expand=True) 
+    listbox.bind("<<ListboxSelect>>", on_listbox_select)
+
+    # Button Frame
+    button_frame = tk.Frame(main_frame, bg="navyblue")  # Pack button frame in main_frame
+    button_frame.pack(pady=10)
+
+    # Edit Button
+    edit_button = tk.Button(button_frame, text="Edit", bg="white", fg="navyblue", font=("Calibri", 12, "bold"), command=on_edit)
+    edit_button.pack(side=tk.LEFT, padx=5)
+
+    # Delete Button
+    delete_button = tk.Button(button_frame, text="Delete", bg="white", fg="navyblue", font=("Calibri", 12, "bold"), command=on_delete)
+    delete_button.pack(side=tk.LEFT, padx=5)
+
+    # Update Button (initially disabled)
+    update_button = tk.Button(button_frame, text="Update", bg="white", fg="navyblue", font=("Calibri", 12, "bold"), state=tk.DISABLED, command=on_update)
+    update_button.pack(side=tk.LEFT, padx=5)
+
+    # Back button to close the view bookings window and show the main window again
+    back_button = tk.Button(button_frame, text="Back", command=lambda: [view_bookings_window.destroy(), master.deiconify()])
+    back_button.pack(side=tk.LEFT, padx=5) 
+
+
+# Functions for button actions (replace with your actual logic)
+def on_edit():
+    update_button.config(state=tk.NORMAL)  # Enable the Update button
+
+def on_delete():
+    selection = listbox.curselection()
+    if selection:
+        index = selection[0]
+        booking = bookings[index]
+        if messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete this booking:\n{booking}?"):
+            listbox.delete(index)
+            del bookings[index]
+            messagebox.showinfo("Success", "Booking deleted successfully.")
+
+def on_update():
+    update_button.config(state=tk.DISABLED)
+
 
 
 # --- Program Start ---
