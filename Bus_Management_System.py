@@ -228,7 +228,7 @@ def fetch_bus_trip_details(bus_id):
 
         # Fetch trip details
         cursor.execute(
-            "SELECT Bus_ID, Trip_ID, StartPoint, EndPoint, Shift, Name, DepartureTime "  # Include Trip_ID in the SELECT
+            "SELECT Bus_ID, Trip_ID, StartPoint, EndPoint, Shift, Name, DepartureTime " 
             "FROM v_BusTripInformation WHERE Bus_ID = ?",
             (bus_id,)
         )
@@ -236,10 +236,10 @@ def fetch_bus_trip_details(bus_id):
 
         # Fetch the stops for the trip (if trip_details were found)
         if trip_details:
-            trip_id = trip_details[1]  # Get the Trip_ID (now at index 1)
+            bus_id = trip_details[1]  # Get the Trip_ID (now at index 1)
             cursor.execute(
                 "SELECT Name FROM v_BusTripInformationStopList WHERE Trip_ID = ?",
-                (trip_id,)
+                (bus_id,)
             )
             stops = [stop[0] for stop in cursor.fetchall()]
 
