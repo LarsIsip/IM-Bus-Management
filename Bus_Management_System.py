@@ -11,6 +11,27 @@ current_bus = None  # To track the selected bus
 
 bookings = [] #catcher of booking details
 
+def populate_view_bookings():
+
+    try:
+        conn = sqlite3.connect('BMS.db')
+        cursor = conn.cursor()
+
+        # Fetch data from the necessary tables
+        cursor.execute("SELECT * FROM v_BookingDetails")
+        rows = cursor.fetchall()
+
+        bookings.append(rows)
+        
+        print("v_BookingDetails view populated successfully.")
+
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+
 # --- Login Window ---
 def create_login_window():
     def login():
@@ -396,7 +417,7 @@ def create_ticket_success_window(name, contact, amount, bus_id):
     conn = sqlite3.connect('BMS.db')
     cursor = conn.cursor()
 
-            # Get the Trip_ID from v_BusTripInformation based on the selected bus_id
+        # Get the Trip_ID from v_BusTripInformation based on the selected bus_id
     cursor.execute("SELECT * FROM v_BusTripInformation WHERE Bus_ID = ?", (current_bus,))
     bus_info = cursor.fetchone()
     bus_number = str(bus_info[0])
@@ -467,6 +488,8 @@ def create_view_bookings_window(master):
     # Details Label (inside the details_frame)
     details_label = tk.Label(details_frame, text="", bg="white", font=("Calibri", 12)) #Empty at the start
     details_label.pack(pady=10)
+    populate_view_bookings()
+
     
     # Listbox to display bookings
     listbox = tk.Listbox(details_frame, width=50)
@@ -493,7 +516,7 @@ def create_view_bookings_window(master):
 
     # Back button to close the view bookings window and show the main window again
     back_button = tk.Button(button_frame, text="Back", command=lambda: [view_bookings_window.destroy(), master.deiconify()])
-    back_button.pack(side=tk.LEFT, padx=5) 
+    back_button.pack(side=tk.LEFT, padx=5)
 
 
 # Functions for button actions (replace with your actual logic)
