@@ -1,4 +1,5 @@
 import tkinter as tk
+import sqlite3 
 from tkinter import ttk, messagebox
 from tkinter import PhotoImage
 import os
@@ -6,13 +7,7 @@ import os
 
 
 current_bus = None  # To track the selected bus
-bus_details = {
-    "Bus 1": {
-        "stops": [("SM Caloocan", 1), ("SM Fairview", 2), ("SM North", 3)],
-        "driver": "Bentong",
-    },
-    #DB catch other Bus Details
-}
+
 bookings = [] #catcher of booking details
 
 # --- Login Window ---
@@ -117,27 +112,17 @@ def create_bus_selection_window():
         # "Select Bus Schedule" text
     select_bus_label = tk.Label(container, text="Select Bus Schedule:", font=("calibri", 12, "bold"), bg='white')
     select_bus_label.grid(row=0, column=0, columnspan=2, padx=7, pady=(5, 10), sticky='w')
+
+    bus_details = fetch_bus_details()
     
 
-        # Bus 1
-    bus1_button = tk.Button(container, text="Bus 1\nSM Caloocan - SM North\n30 seats", command=lambda: on_bus_click("Bus 1\nSM Caloocan - SM North\n30 seats"), **button_config)
-    bus1_button.grid(row=1, column=0, padx=10, pady=10)
+    for i, (bus_id, info) in enumerate(bus_details.items()):
+        button_text = f"{bus_id}\n{info['route']}\n{info['capacity']} seats"
 
-        # Bus 2
-    bus2_button = tk.Button(container, text="Bus 2\nSM Fairview - SM Megamall\n50 seats", command=lambda: on_bus_click("Bus 2\nSM Fairview - SM Megamall\n50 seats"), **button_config)
-    bus2_button.grid(row=1, column=1, padx=10, pady=10)
-
-        # Bus 3
-    bus3_button = tk.Button(container, text="Bus 3\nSM Fairview - SM MOA\n40 seats", command=lambda: on_bus_click("Bus 3\nSM Fairview - SM MOA\n40 seats"), **button_config)
-    bus3_button.grid(row=2, column=0, padx=10, pady=10)
-
-        # Bus 4
-    bus4_button = tk.Button(container, text="Bus 4\nSM Novaliches - SM MOA\n60 seats", command=lambda: on_bus_click("Bus 4\nSM Novaliches - SM MOA\n60 seats"), **button_config)
-    bus4_button.grid(row=2, column=1, padx=10, pady=10)
-
-        # Bus 5
-    bus5_button = tk.Button(container, text="Bus 5\nSM Manila - SM North\n45 seats", command=lambda: on_bus_click("Bus 5\nSM Manila - SM North\n45 seats"), **button_config)
-    bus5_button.grid(row=3, column=0, columnspan=2, padx=15, pady=15)
+        bus_button = tk.Button(container, text=button_text, 
+                               command=lambda bus=bus_id: on_bus_click(bus), **button_config)
+        bus_button.grid(row=i // 2 + 1, column=i % 2, padx=10, pady=10)
+    
 
     view_bookings_button = tk.Button(outer_container, text="View Bookings", command=on_view_bookings_click, **view_bookings_button_config)
     view_bookings_button.pack(side=tk.RIGHT, padx=(0, 15), pady=(0, 20))
@@ -145,88 +130,126 @@ def create_bus_selection_window():
 
     app.mainloop()
 
+def fetch_bus_details():
+    bus_details = {}
+    try:
+        conn = sqlite3.connect('BMS.db')  
+        cursor = conn.cursor()
 
+        # Fetch data from the v_BusSelection view with the new column names
+        cursor.execute("SELECT Bus_ID, StartPoint, EndPoint, Capacity FROM v_BusSelection")
+        rows = cursor.fetchall()
+
+        for row in rows:
+            bus_id, start_point, end_point, capacity = row
+
+            # Create route information by combining start and end points
+            route = f"{start_point} - {end_point}"
+
+            # Use bus_id as the key in bus_details
+            bus_details[bus_id] = {"route": route, "capacity": capacity}
+
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+    return bus_details
 
 
 def create_bus_trip_interface(bus_info, master):
-    # Parse information from bus_info
-    bus_number, route, seats = bus_info.split('\n')
+    bus_id = bus_info
 
-    
+    # Fetch trip details from the database
+    trip_details, stops = fetch_bus_trip_details(bus_id)
 
-    bus_details = {
-        "Bus 1": {
-            "stops": [("SM Caloocan", 1), ("SM Fairview", 2), ("SM North", 3)],
-            "driver": "Bentong",
-        },
-        "Bus 2": {
-            "stops": [("SM Fairview", 1), ("SM North", 2), ("SM Megamall", 3)],
-            "driver": "Lars",
-        },
-        "Bus 3": {
-            "stops": [("SM Fairview", 1), ("SM Caloocan", 2), ("SM MOA", 3)],
-            "driver": "Seth",
-        },
-        "Bus 4": {
-            "stops": [("SM Novaliches", 1), ("SM Caloocan", 2), ("SM MOA", 3)],
-            "driver": "Andeng",
-        },
-        "Bus 5": {
-            "stops": [("SM Manila", 1), ("SM Caloocan", 2), ("SM North", 3)],
-            "driver": "Sean",
-        },
-    }
-
+    # Create a top-level window associated with the main window (master)
     root = tk.Toplevel(master)
     root.title("City Bus Trip")
     root.geometry("400x500")
     root.config(bg="navyblue")
 
-    img = PhotoImage(file=os.path.join(os.path.dirname(__file__), "Assets", "CITY.png"))
+    # Logo Image
+    img = PhotoImage(file=os.path.join(os.path.dirname(__file__), "Assets", "CITY.png"))  
     logo_label = tk.Label(root, image=img, bg='navyblue')
-    logo_label.image = img
-    logo_label.pack(pady=(20, 10))
+    logo_label.image = img  # Keep a reference to avoid garbage collection
+    logo_label.pack(pady=(20, 10))  
 
     frame = ttk.Frame(root, padding=(200, 30), relief="solid")
     frame.place(relx=0.5, rely=0.6, anchor="center")
 
-  
-    title_label = ttk.Label(frame, text=bus_number, font=("calibri", 18, "bold"))
-    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
-    route_label = ttk.Label(frame, text=route, font=("calibri", 12, "bold"), justify="center")
-    route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+    # Display trip details if available
+    if trip_details:
+        _, trip_id, start_point, end_point, shift, driver, departure_time = trip_details #Skip the first column (Bus_ID)
+        route = f"{start_point} - {end_point}"
+        time = f"{departure_time} ({shift})"
 
-   
-    details = bus_details.get(bus_number)
-    if details:
-        route_label = ttk.Label(frame, text="Mon - Fri", font=("calibri", 10), justify="center")
+        title_label = ttk.Label(frame, text=f"Bus {bus_id}", font=("calibri", 18, "bold"))
+        title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        route_label = ttk.Label(frame, text=route, font=("calibri", 12, "bold"), justify="center")
+        route_label.grid(row=1, column=0, columnspan=2, pady=(0, 5))
+
+        # Trip details labels
+        route_label = ttk.Label(frame, text=time, font=("calibri", 11), justify="center")
         route_label.grid(row=2, column=0, columnspan=2, pady=(0, 0))
 
-        route_label = ttk.Label(frame, text="6:00am - 9:00am", font=("calibri", 11), justify="center")
-        route_label.grid(row=3, column=0, columnspan=2, pady=(0, 0))
+        route_label = ttk.Label(frame, text=f"Driver: {driver}", font=("calibri", 10), justify="center")
+        route_label.grid(row=3, column=0, columnspan=2, pady=(0, 20))
 
-        route_label = ttk.Label(frame, text=f"Driver: {details['driver']}", font=("calibri", 10), justify="center")
-        route_label.grid(row=4, column=0, columnspan=2, pady=(0, 20))
+        # Display stops
+        stops_label = tk.Label(frame, text="Stops:", font=("calibri", 12, "bold"))
+        stops_label.grid(row=5, column=0, columnspan=2, pady=(10, 5))
 
-  
-        for stop, row in details['stops']:
-            stop_label = ttk.Label(frame, text=f"{row}", font=("calibri", 10, "bold"))
-            stop_label.grid(row=row + 4, column=0, padx=(0, 10))
-            stop_name_label = ttk.Label(frame, text=stop, font=("calibri", 10))
-            stop_name_label.grid(row=row + 4, column=1, sticky="w")
+        for i, stop in enumerate(stops):
+            stop_label = ttk.Label(frame, text=f"{i+1}. {stop}", font=("calibri", 10))
+            stop_label.grid(row=i + 6, column=0, columnspan=2, sticky="w")
 
-        # Back button
+        # Adjust button positions after stops
         back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
-        back_button.grid(row=len(details['stops']) + 5, column=0, pady=(30, 0), padx=4)
+        back_button.grid(row=len(stops) + 7, column=0, pady=(30, 0), padx=4)
 
-        # Next button
-        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20, command=lambda: [root.destroy(), create_ticket_booking_window(master)]) 
-        next_button.grid(row=len(details['stops']) + 5, column=1, pady=(30, 0), padx=4)
+        # Next button (call create_ticket_booking_window with the main app and the bus_id as arguments)
+        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20, command=lambda: [root.destroy(), create_ticket_booking_window(master, bus_id)]) 
+        next_button.grid(row=len(stops) + 7, column=1, pady=(30, 0), padx=4)
+
     else:
-        error_label = ttk.Label(frame, text="Invalid Bus Number!", font=("calibri", 12, "bold"))
+        error_label = ttk.Label(frame, text="Trip details not found!", font=("calibri", 12, "bold"))
         error_label.grid(row=2, column=0, columnspan=2, pady=(10, 0))
 
     root.mainloop()
+
+def fetch_bus_trip_details(bus_id):
+    trip_details = None
+    stops = []  # List to hold the stops
+    try:
+        conn = sqlite3.connect('BMS.db')
+        cursor = conn.cursor()
+
+        # Fetch trip details
+        cursor.execute(
+            "SELECT Bus_ID, Trip_ID, StartPoint, EndPoint, Shift, Name, DepartureTime "  # Include Trip_ID in the SELECT
+            "FROM v_BusTripInformation WHERE Bus_ID = ?",
+            (bus_id,)
+        )
+        trip_details = cursor.fetchone()
+
+        # Fetch the stops for the trip (if trip_details were found)
+        if trip_details:
+            trip_id = trip_details[1]  # Get the Trip_ID (now at index 1)
+            cursor.execute(
+                "SELECT Name FROM v_BusTripInformationStopList WHERE Trip_ID = ?",
+                (trip_id,)
+            )
+            stops = [stop[0] for stop in cursor.fetchall()]
+
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+    return trip_details, stops
 
 def create_ticket_booking_window(app):
     def on_next_button_click():
