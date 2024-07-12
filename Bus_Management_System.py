@@ -161,7 +161,6 @@ def fetch_bus_details():
 
 def create_bus_trip_interface(bus_info, master):
     bus_id = bus_info
-
     # Fetch trip details from the database
     trip_details, stops = fetch_bus_trip_details(bus_id)
 
@@ -286,7 +285,7 @@ def create_ticket_booking_window(app, bus_id):  # Accept bus_id
 
                 conn.commit()
                 root.destroy()  # Close the ticket booking window
-                create_ticket_success_window(name, contact, amount, bus_info)
+                create_ticket_success_window(name, contact, amount, bus_id)
             else:
                 messagebox.showerror("Error", "Bus trip information not found.")
 
@@ -372,8 +371,7 @@ def fetch_trip_price(bus_id):
         
     
 
-def create_ticket_success_window(name, contact, amount):
-
+def create_ticket_success_window(name, contact, amount, bus_id):
     # This function displays the success message on button click
     def show_message():
         messagebox.showinfo("Booking Information", details_text) # Reference the details_text defined outside
@@ -394,11 +392,22 @@ def create_ticket_success_window(name, contact, amount):
     details_frame = tk.Frame(main_frame, bg="white")
     details_frame.pack(ipady=50, ipadx=80, expand=True)
 
+    
+    conn = sqlite3.connect('BMS.db')
+    cursor = conn.cursor()
+
+            # Get the Trip_ID from v_BusTripInformation based on the selected bus_id
+    cursor.execute("SELECT * FROM v_BusTripInformation WHERE Bus_ID = ?", (current_bus,))
+    bus_info = cursor.fetchone()
+    bus_number = str(bus_info[0])
+    route = str(f"{bus_info[2]} - {bus_info[3]}")
+    driver = str(bus_info[5])
+    
+
     # Booking details labels
-    bus_info = current_bus
+
     if bus_info:
-        bus_number, route, _ = bus_info.split('\n')
-        driver = bus_details.get(bus_number, {}).get('driver', 'Unknown')
+
         details_text = (
             f"Name: {name}\n"
             f"Contact: {contact}\n\n"
