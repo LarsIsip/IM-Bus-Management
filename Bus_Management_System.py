@@ -3,6 +3,7 @@ import sqlite3
 from tkinter import ttk, messagebox
 from tkinter import PhotoImage
 import os
+import datetime
 
 
 
@@ -205,12 +206,10 @@ def create_bus_trip_interface(bus_info, master):
             stop_label = ttk.Label(frame, text=f"{i+1}. {stop}", font=("calibri", 10))
             stop_label.grid(row=i + 6, column=0, columnspan=2, sticky="w")
 
-        # Adjust button positions after stops
         back_button = tk.Button(frame, text="BACK", bg="navyblue", fg="white", padx=20, command=root.destroy)
         back_button.grid(row=len(stops) + 7, column=0, pady=(30, 0), padx=4)
 
-        # Next button (call create_ticket_booking_window with the main app and the bus_id as arguments)
-        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20, command=lambda: [root.destroy(), create_ticket_booking_window(master, bus_id)]) 
+        next_button = tk.Button(frame, text="NEXT", bg="navyblue", fg="white", padx=20, command=lambda: [root.destroy(), create_ticket_booking_window(master, bus_info)])  # Pass bus_info here
         next_button.grid(row=len(stops) + 7, column=1, pady=(30, 0), padx=4)
 
     else:
@@ -251,22 +250,51 @@ def fetch_bus_trip_details(bus_id):
 
     return trip_details, stops
 
-def create_ticket_booking_window(app):
+def create_ticket_booking_window(app, bus_id):  # Accept bus_id
     def on_next_button_click():
         name = name_entry.get()
         contact = contact_entry.get()
         amount = amount_entry.get()
 
+        
+
         if not name or not contact or not amount:
             messagebox.showerror("Error", "Please fill in all fields.")
-        else:
-            # Will add the process for booking information 
-            # (save to a database and calculate fares)
-            root.destroy()
-            #(B.TICKET SUCCESS)
-            create_ticket_success_window(name, contact, amount)
+            return
 
-            # destroy window after process
+        # Save booking data to the database (t_Ticket and t_Passenger)
+        try:
+            conn = sqlite3.connect('BMS.db')
+            cursor = conn.cursor()
+
+            # Get the Trip_ID from v_BusTripInformation based on the selected bus_id
+            cursor.execute("SELECT Trip_ID FROM v_BusTripInformation WHERE Bus_ID = ?", (bus_id,))
+            trip_id = cursor.fetchone()
+
+            if trip_id:
+                trip_id = trip_id[0]  # Extract Trip_ID from the result
+                current_date = datetime.date.today().strftime('%Y-%m-%d') # Get current date in YYYY-MM-DD
+
+                # Insert ticket into t_Ticket
+                cursor.execute("INSERT INTO t_Ticket (Trip_ID, Price, ScheduledDate, DatePurchased) VALUES (?, ?, ?, ?)",
+                               (trip_id, amount, current_date, current_date))  # Use today as both scheduled and purchased date
+                ticket_id = cursor.lastrowid  # Get the inserted Ticket_ID
+
+                # Insert passenger into t_Passenger
+                cursor.execute("INSERT INTO t_Passenger (Ticket_ID, Name, ContactInfo) VALUES (?, ?, ?)",
+                               (ticket_id, name, contact))
+
+                conn.commit()
+                root.destroy()  # Close the ticket booking window
+                create_ticket_success_window(name, contact, amount, bus_info)
+            else:
+                messagebox.showerror("Error", "Bus trip information not found.")
+
+        except sqlite3.Error as e:
+            messagebox.showerror("Error", f"Database error: {e}")
+        finally:
+            if conn:
+                conn.close()
             
 
     root = tk.Toplevel(app)
@@ -311,11 +339,38 @@ def create_ticket_booking_window(app):
     next_button = tk.Button(form_frame, text="NEXT", bg="navyblue", fg="white", padx=30, command=on_next_button_click)
     next_button.grid(row=7, column=0, columnspan=2, pady=20)
 
-    
+    trip_price = fetch_trip_price(bus_id)
+    if trip_price:
+        amount_entry.insert(0, str(trip_price))
+    else:
+        messagebox.showerror("Error", "Trip price not found.")
+    # ...
 
-
-    # Run the application
     root.mainloop()
+
+def fetch_trip_price(bus_id):
+    try:
+        conn = sqlite3.connect('BMS.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT Fare FROM v_BusTripInformation WHERE Bus_ID = ?", (bus_id,))
+        trip_price = cursor.fetchone()
+
+        if trip_price:
+            return trip_price[0]  # Extract price from the tuple
+        else:
+            return None
+
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
+
+   
+        
+    
 
 def create_ticket_success_window(name, contact, amount):
 
